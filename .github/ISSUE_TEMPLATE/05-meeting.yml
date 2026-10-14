@@ -1,0 +1,54 @@
+name: 회의록
+description: 정기 회의 / 스프린트 회고 기록을 남깁니다.
+title: "[MEETING] YYYY-MM-DD "
+labels: ["meeting"]
+body:
+  - type: input
+    id: date
+    attributes:
+      label: 일시
+      placeholder: YYYY-MM-DD HH:MM ~ HH:MM
+    validations:
+      required: true
+
+  - type: input
+    id: attendees
+    attributes:
+      label: 참석자
+    validations:
+      required: true
+
+  - type: textarea
+    id: agenda
+    attributes:
+      label: 안건
+      value: |
+        1.
+        2.
+    validations:
+      required: true
+
+  - type: textarea
+    id: decisions
+    attributes:
+      label: 결정 사항
+      description: 결정되지 않은 것은 "보류"로 명시합니다. 추측해서 적지 않습니다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actions
+    attributes:
+      label: 액션 아이템
+      description: 담당자와 기한을 반드시 적습니다.
+      value: |
+        - [ ] @담당자 — 할 일 (기한: YYYY-MM-DD)
+        - [ ] @담당자 — 할 일 (기한: YYYY-MM-DD)
+    validations:
+      required: true
+
+  - type: textarea
+    id: next
+    attributes:
+      label: 다음 회의
+      placeholder: YYYY-MM-DD HH:MM

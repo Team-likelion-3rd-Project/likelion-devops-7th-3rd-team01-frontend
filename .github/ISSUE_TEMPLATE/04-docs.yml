@@ -1,0 +1,35 @@
+name: 문서 작업
+description: README, Wiki, API 명세 등 문서 작업을 등록합니다.
+title: "[DOCS] "
+labels: ["docs"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 작업 내용
+    validations:
+      required: true
+
+  - type: dropdown
+    id: target
+    attributes:
+      label: 대상 문서
+      options:
+        - README.md
+        - CONTRIBUTING.md
+        - Wiki - Architecture
+        - Wiki - API Specification
+        - Wiki - ERD
+        - Wiki - 회의록
+        - Wiki - 트러블슈팅
+        - 기타
+    validations:
+      required: true
+
+  - type: textarea
+    id: todo
+    attributes:
+      label: 세부 작업
+      value: |
+        - [ ]
+        - [ ]

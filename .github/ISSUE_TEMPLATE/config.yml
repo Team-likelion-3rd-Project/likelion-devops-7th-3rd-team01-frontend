@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 자유 논의 (Discussions)
+    url: https://github.com/Team-likelion-3rd-Project/likelion-devops-7th-3rd-team01/discussions
+    about: 이슈로 만들기 전 아이디어나 질문을 논의합니다.
+  - name: 기여 가이드
+    url: https://github.com/Team-likelion-3rd-Project/likelion-devops-7th-3rd-team01/blob/main/CONTRIBUTING.md
+    about: 브랜치·커밋·PR 규칙을 먼저 확인하세요.

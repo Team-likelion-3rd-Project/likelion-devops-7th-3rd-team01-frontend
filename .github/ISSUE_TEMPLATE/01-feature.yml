@@ -1,0 +1,73 @@
+name: 기능 개발
+description: 새로 구현할 기능을 등록합니다.
+title: "[FEAT] "
+labels: ["feat"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 작업 내용
+      description: 무엇을 만드는지 한두 문장으로 씁니다.
+      placeholder: 카카오 소셜 로그인 API를 구현한다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: todo
+    attributes:
+      label: 세부 작업
+      description: 체크박스로 쪼갭니다. 하나가 2시간을 넘으면 더 나눕니다.
+      value: |
+        - [ ]
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 완료 조건
+      description: 무엇이 되면 이 이슈를 닫을 수 있는지 검증 가능한 문장으로 씁니다.
+      placeholder: |
+        - 카카오 계정으로 로그인하면 JWT가 발급된다.
+        - 최초 로그인 시 회원 레코드가 생성된다.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 영역
+      options:
+        - frontend
+        - backend
+        - infra
+        - design
+        - db
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 우선순위
+      options:
+        - P0 (즉시 / 블로커)
+        - P1 (이번 스프린트)
+        - P2 (다음 스프린트)
+        - P3 (여유 시)
+    validations:
+      required: true
+
+  - type: input
+    id: due
+    attributes:
+      label: 예상 완료일
+      placeholder: YYYY-MM-DD
+
+  - type: textarea
+    id: refs
+    attributes:
+      label: 참고 자료
+      description: 관련 이슈, 디자인 링크, 문서 등

@@ -1,0 +1,55 @@
+name: 트러블슈팅
+description: 막힌 문제와 해결 과정을 기록합니다. (해결 후에도 닫지 말고 기록을 남깁니다)
+title: "[TS] "
+labels: ["help-wanted"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 문제 상황
+      description: 어떤 작업을 하다가 무엇이 막혔는지 씁니다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: error
+    attributes:
+      label: 에러 메시지 / 로그
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: 시도한 것
+      value: |
+        - [ ] 시도 1 →  결과
+        - [ ] 시도 2 →  결과
+    validations:
+      required: true
+
+  - type: textarea
+    id: hypothesis
+    attributes:
+      label: 추정 원인
+      description: 확실하지 않으면 "불확실"이라고 명시합니다.
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 해결 방법
+      description: 해결되면 이 항목을 채우고 팀 Wiki 트러블슈팅 문서에 옮깁니다.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 영역
+      options:
+        - frontend
+        - backend
+        - infra
+        - design
+        - db
+    validations:
+      required: true

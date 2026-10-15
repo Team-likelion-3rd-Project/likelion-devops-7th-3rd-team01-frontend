@@ -38,8 +38,8 @@ function CategorySection({ code, label, issues }) {
                 </span>
                 <span className="category-section-title">{issue.title}</span>
               </Link>
-              {idx === 0 && issue.oneLine && (
-                <p className="category-section-oneline">{issue.oneLine}</p>
+              {idx === 0 && issue.summary && (
+                <p className="category-section-summary">{issue.summary}</p>
               )}
             </li>
           ))}

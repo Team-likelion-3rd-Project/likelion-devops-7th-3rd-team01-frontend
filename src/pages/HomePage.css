@@ -102,11 +102,11 @@
   font-weight: var(--font-weight-semibold);
 }
 
-.category-section-issue:first-child .category-section-link:has(+ .category-section-oneline) {
+.category-section-issue:first-child .category-section-link:has(+ .category-section-summary) {
   padding-bottom: var(--space-1);
 }
 
-.category-section-oneline {
+.category-section-summary {
   margin: 0 0 var(--space-3);
   padding-left: var(--rank-width);
   color: var(--color-text-muted);

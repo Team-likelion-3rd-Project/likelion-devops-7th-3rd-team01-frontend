@@ -205,7 +205,7 @@
   letter-spacing: 0;
 }
 
-.issue-oneline {
+.issue-summary {
   margin: 0;
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-sm);

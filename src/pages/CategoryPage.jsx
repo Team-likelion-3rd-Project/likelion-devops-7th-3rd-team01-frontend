@@ -234,7 +234,7 @@ function CategoryContent({ code }) {
 function IssueItem({ issue, expanded, onToggle, now }) {
   const buttonId = `issue-${issue.issueId}-button`
   const panelId = `issue-${issue.issueId}-panel`
-  const { oneLine, keyPoints = [], timeline = [], glossary = [], sources = [] } = issue
+  const { summary, keyPoints = [], timeline = [], glossary = [], sources = [] } = issue
 
   return (
     <li
@@ -260,10 +260,10 @@ function IssueItem({ issue, expanded, onToggle, now }) {
       <div id={panelId} className="issue-panel" role="region" aria-labelledby={buttonId} inert={!expanded}>
         <div className="issue-panel-clip">
           <div className="issue-panel-content">
-            {oneLine && (
+            {summary && (
               <section className="issue-section">
                 <h3 className="issue-section-title">한 줄 요약</h3>
-                <p className="issue-oneline">{oneLine}</p>
+                <p className="issue-summary">{summary}</p>
               </section>
             )}
 

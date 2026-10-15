@@ -4,7 +4,7 @@ export const CATEGORIES = [
   { code: 'IT_GENERAL', label: 'IT 일반' },
   { code: 'MOBILE_TELECOM', label: '모바일·통신' },
   { code: 'COMPUTER', label: '컴퓨터' },
-  { code: 'INTERNET', label: '인터넷' },
+  { code: 'SECURITY', label: '보안' },
   { code: 'SCIENCE', label: '과학' },
 ]
 

@@ -73,19 +73,19 @@
       ]
     },
     {
-      "category": "INTERNET",
+      "category": "SECURITY",
       "issues": [
         {
-          "issueId": "internet-001",
+          "issueId": "security-001",
           "title": "대형 클라우드 서울 리전 장애…주요 서비스 3시간 먹통",
           "summary": "클라우드 서울 리전 네트워크 장애로 쇼핑·배달 앱 등이 몇 시간 동안 멈췄어요."
         },
         {
-          "issueId": "internet-002",
+          "issueId": "security-002",
           "title": "인기 오픈소스 라이브러리 악성코드 삽입…공급망 공격 비상"
         },
         {
-          "issueId": "internet-003",
+          "issueId": "security-003",
           "title": "포털 검색에 AI 요약 기본 적용…언론·쇼핑몰 유입 감소 우려"
         }
       ]

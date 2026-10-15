@@ -795,10 +795,10 @@
       }
     ]
   },
-  "INTERNET": {
+  "SECURITY": {
     "issues": [
       {
-        "issueId": "internet-001",
+        "issueId": "security-001",
         "title": "대형 클라우드 서울 리전 장애…주요 서비스 3시간 먹통",
         "summary": "클라우드 서울 리전 네트워크 장애로 쇼핑·배달 앱 등이 몇 시간 동안 멈췄어요.",
         "keyPoints": [
@@ -846,7 +846,7 @@
         ]
       },
       {
-        "issueId": "internet-002",
+        "issueId": "security-002",
         "title": "인기 오픈소스 라이브러리 악성코드 삽입…공급망 공격 비상",
         "summary": "주간 다운로드 수백만 회 npm 패키지에 악성코드가 심겨 긴급 업데이트가 필요해요.",
         "keyPoints": [
@@ -894,7 +894,7 @@
         ]
       },
       {
-        "issueId": "internet-003",
+        "issueId": "security-003",
         "title": "포털 검색에 AI 요약 기본 적용…언론·쇼핑몰 유입 감소 우려",
         "summary": "검색 결과 맨 위에 AI 요약이 뜨면서 원문 사이트로 넘어가는 방문이 줄 수 있어요.",
         "keyPoints": [
@@ -922,19 +922,19 @@
           {
             "press": "테크데일리",
             "title": "포털 검색 맨 위에 AI 요약…원문 클릭은 줄었다",
-            "url": "https://example.com/news/internet-003-1",
+            "url": "https://example.com/news/security-003-1",
             "publishedAt": "2026-10-13T10:00:00+09:00"
           },
           {
             "press": "IT조선일보",
             "title": "언론계 \"AI 요약에 콘텐츠 대가 내야\"",
-            "url": "https://example.com/news/internet-003-2",
+            "url": "https://example.com/news/security-003-2",
             "publishedAt": "2026-10-14T09:30:00+09:00"
           }
         ]
       },
       {
-        "issueId": "internet-004",
+        "issueId": "security-004",
         "title": "온라인 플랫폼 법안 국회 상임위 통과…자사 우대 금지 담겨",
         "summary": "대형 플랫폼이 자기 상품을 검색 결과에서 유리하게 노출하는 행위를 막는 법안이 한 걸음 나아갔어요.",
         "keyPoints": [
@@ -962,13 +962,13 @@
           {
             "press": "법률IT신문",
             "title": "플랫폼법 상임위 통과…자사 우대 금지",
-            "url": "https://example.com/news/internet-004-1",
+            "url": "https://example.com/news/security-004-1",
             "publishedAt": "2026-10-08T18:20:00+09:00"
           }
         ]
       },
       {
-        "issueId": "internet-005",
+        "issueId": "security-005",
         "title": "숏폼 하루 이용 시간 1시간 넘어…10대 이용 제한 논의",
         "summary": "짧은 영상 앱 이용 시간이 빠르게 늘면서 청소년 보호 대책 논의가 시작됐어요.",
         "keyPoints": [
@@ -996,7 +996,7 @@
           {
             "press": "비즈테크",
             "title": "숏폼 하루 1시간 넘었다…10대 보호 대책 나오나",
-            "url": "https://example.com/news/internet-005-1",
+            "url": "https://example.com/news/security-005-1",
             "publishedAt": "2026-10-07T13:00:00+09:00"
           }
         ]

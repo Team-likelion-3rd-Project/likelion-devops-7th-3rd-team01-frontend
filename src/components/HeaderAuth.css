@@ -1,0 +1,15 @@
+/* <button>도 <Link>로 만든 버튼과 같은 커서로 보이게 한다.
+   글꼴은 전역 button { font: inherit } 가 상속시키고, 크기·굵기·줄 높이는 .header-button 을 따른다 */
+button.header-button {
+  cursor: pointer;
+}
+
+.header-user {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+}

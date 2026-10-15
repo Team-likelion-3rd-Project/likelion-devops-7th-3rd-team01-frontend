@@ -1,0 +1,63 @@
+{
+  "questions": [
+    {
+      "questionId": "q-104",
+      "content": "AI 기본법 시행령에서 말하는 '고영향 AI'에 챗봇 상담 서비스도 포함되나요?",
+      "status": "PENDING",
+      "createdAt": "2026-10-15T10:32:00+09:00"
+    },
+    {
+      "questionId": "q-103",
+      "content": "서울 리전 장애 때 멀티 AZ를 썼던 서비스는 왜 피해가 적었나요?",
+      "status": "DONE",
+      "createdAt": "2026-10-14T21:05:00+09:00"
+    },
+    {
+      "questionId": "q-102",
+      "content": "npm 패키지 공급망 공격, 우리 프로젝트가 영향받았는지 어떻게 확인하나요?",
+      "status": "DONE",
+      "createdAt": "2026-10-13T14:48:00+09:00"
+    },
+    {
+      "questionId": "q-101",
+      "content": "온디바이스 AI랑 클라우드 AI는 배터리 소모가 얼마나 차이 나나요?",
+      "status": "FAILED",
+      "createdAt": "2026-10-12T09:17:00+09:00"
+    }
+  ],
+  "savedQuestions": [
+    {
+      "questionId": "q-103",
+      "content": "서울 리전 장애 때 멀티 AZ를 썼던 서비스는 왜 피해가 적었나요?",
+      "savedAt": "2026-10-14T21:30:00+09:00"
+    },
+    {
+      "questionId": "q-102",
+      "content": "npm 패키지 공급망 공격, 우리 프로젝트가 영향받았는지 어떻게 확인하나요?",
+      "savedAt": "2026-10-13T15:02:00+09:00"
+    }
+  ],
+  "savedArticles": [
+    {
+      "articleId": "a-301",
+      "title": "서울 리전 3시간 장애…'멀티 AZ' 다시 주목",
+      "press": "클라우드저널",
+      "url": "https://example.com/news/cloud-001-1",
+      "savedAt": "2026-10-14T20:11:00+09:00"
+    },
+    {
+      "articleId": "a-302",
+      "title": "npm 인기 패키지에 악성코드…지금 확인하세요",
+      "press": "데브위클리",
+      "url": "https://example.com/news/sec-003-1",
+      "savedAt": "2026-10-13T08:40:00+09:00"
+    },
+    {
+      "articleId": "a-303",
+      "title": "한국어 특화 초거대 AI, 오픈소스로 풀렸다",
+      "press": "테크데일리",
+      "url": "https://example.com/news/ai-001-1",
+      "savedAt": "2026-10-12T19:25:00+09:00"
+    }
+  ]
+}

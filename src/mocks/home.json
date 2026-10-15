@@ -1,0 +1,112 @@
+{
+  "categories": [
+    {
+      "category": "AI",
+      "issues": [
+        {
+          "issueId": "ai-001",
+          "title": "국내 빅테크, 한국어 특화 초거대 AI 모델 오픈소스 공개",
+          "oneLine": "한국어 성능을 앞세운 대형 언어모델이 공개되며 국내 AI 생태계 경쟁이 본격화됐어요."
+        },
+        {
+          "issueId": "ai-002",
+          "title": "AI 기본법 시행령 확정…고영향 AI 사업자 의무 구체화"
+        },
+        {
+          "issueId": "ai-003",
+          "title": "AI 에이전트 도입 기업 급증…\"업무 자동화 다음 단계\""
+        }
+      ]
+    },
+    {
+      "category": "IT_GENERAL",
+      "issues": [
+        {
+          "issueId": "it-001",
+          "title": "공공 클라우드 전환 2단계 착수…민간 SaaS 도입 확대",
+          "oneLine": "정부가 공공기관 시스템의 민간 클라우드 전환을 한 단계 더 넓혀요."
+        },
+        {
+          "issueId": "it-002",
+          "title": "수도권 데이터센터 전력난…지방 분산 인센티브 확대"
+        },
+        {
+          "issueId": "it-003",
+          "title": "제로트러스트 가이드라인 2.0 발표…금융·공공부터 적용"
+        }
+      ]
+    },
+    {
+      "category": "MOBILE_TELECOM",
+      "issues": [
+        {
+          "issueId": "mobile-001",
+          "title": "통신사 유심 정보 유출 후속 조치…전 가입자 유심 교체 완료",
+          "oneLine": "대규모 유심 정보 유출 이후 이어진 무상 교체가 마무리 단계에 들어섰어요."
+        },
+        {
+          "issueId": "mobile-002",
+          "title": "AI 딥보이스 보이스피싱 급증…가족 목소리 흉내"
+        },
+        {
+          "issueId": "mobile-003",
+          "title": "6G 후보 주파수 경매 계획 발표…통신 3사 셈법 복잡"
+        }
+      ]
+    },
+    {
+      "category": "COMPUTER",
+      "issues": [
+        {
+          "issueId": "computer-001",
+          "title": "AI 수요에 GPU 클라우드 가격 인상 잇따라",
+          "oneLine": "AI 학습 수요가 몰리면서 GPU 인스턴스 요금이 줄줄이 오르고 있어요."
+        },
+        {
+          "issueId": "computer-002",
+          "title": "쿠버네티스 신버전 출시…사이드카 없는 서비스 메시 정식 지원"
+        },
+        {
+          "issueId": "computer-003",
+          "title": "AI PC 출하량 비중 40% 돌파…NPU 성능 경쟁 가열"
+        }
+      ]
+    },
+    {
+      "category": "INTERNET",
+      "issues": [
+        {
+          "issueId": "internet-001",
+          "title": "대형 클라우드 서울 리전 장애…주요 서비스 3시간 먹통",
+          "oneLine": "클라우드 서울 리전 네트워크 장애로 쇼핑·배달 앱 등이 몇 시간 동안 멈췄어요."
+        },
+        {
+          "issueId": "internet-002",
+          "title": "인기 오픈소스 라이브러리 악성코드 삽입…공급망 공격 비상"
+        },
+        {
+          "issueId": "internet-003",
+          "title": "포털 검색에 AI 요약 기본 적용…언론·쇼핑몰 유입 감소 우려"
+        }
+      ]
+    },
+    {
+      "category": "SCIENCE",
+      "issues": [
+        {
+          "issueId": "science-001",
+          "title": "한국형 발사체 5차 발사 성공…실용위성 3기 궤도 안착",
+          "oneLine": "국산 발사체가 다섯 번째 발사에서 실용위성을 목표 궤도에 올렸어요."
+        },
+        {
+          "issueId": "science-002",
+          "title": "국내 연구진, 100큐비트급 양자컴퓨터 시연"
+        },
+        {
+          "issueId": "science-003",
+          "title": "핵융합 실험장치, 1억 도 플라스마 400초 유지"
+        }
+      ]
+    }
+  ]
+}

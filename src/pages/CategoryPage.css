@@ -1,0 +1,391 @@
+/* 분야 화면 — index.css의 디자인 토큰만 사용 */
+
+/* 화면 아래 떠 있는 질문 입력창에 마지막 아코디언 내용이 가리지 않도록
+   입력창 실제 높이(ChatInput이 측정해 넣는 --chat-input-height)만큼 아래 여백 확보.
+   측정 전 기본값은 한 줄 입력창 높이에 가깝게 */
+.category-page {
+  padding-bottom: var(--chat-input-height, 96px);
+}
+
+.category-heading {
+  margin-bottom: var(--space-5);
+}
+
+/* ---------- 분야 이동 버튼 줄 ---------- */
+
+.category-nav {
+  /* 좁은 화면에서 가로 스크롤이 화면 끝까지 이어지도록 본문 여백만큼 바깥으로 */
+  margin: 0 calc(var(--gutter) * -1) var(--space-6);
+}
+
+.category-nav-list {
+  position: relative; /* 현재 분야 버튼 위치(offsetLeft) 계산 기준 */
+  display: flex;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-1) var(--gutter); /* 위아래 여백은 포커스 링이 잘리지 않게 */
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.category-nav-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* 분야 6개가 한 줄에 다 안 들어가는 폭: 양 끝을 본문 여백 폭만큼 흐리게 해 옆으로 더 있다는 걸 알림 */
+@media (max-width: 720px) {
+  .category-nav-list {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--gutter),
+      #000 calc(100% - var(--gutter)),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 var(--gutter),
+      #000 calc(100% - var(--gutter)),
+      transparent
+    );
+  }
+}
+
+.category-nav-list li {
+  flex-shrink: 0;
+}
+
+.category-pill {
+  display: inline-block;
+  padding: 7px var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.5;
+  white-space: nowrap;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.category-pill:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-text-strong);
+}
+
+.category-pill.is-current {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ---------- 이슈 목록 (아코디언) ---------- */
+
+.issue-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.issue-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  /* ?issue로 스크롤해 왔을 때 고정 헤더에 가리지 않게 */
+  scroll-margin-top: calc(var(--header-height) + var(--space-5));
+  scroll-margin-bottom: calc(var(--chat-input-height, 96px) + var(--space-4));
+  transition:
+    box-shadow var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.issue-card.is-expanded {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.issue-heading {
+  margin: 0;
+  font-size: var(--font-size-md);
+}
+
+.issue-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-strong);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+}
+
+.issue-title {
+  flex: 1;
+  min-width: 0;
+  /* 접힌 상태: 한 줄 + 말줄임 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.issue-card.is-expanded .issue-title {
+  white-space: normal;
+}
+
+.issue-toggle:hover .issue-title {
+  color: var(--color-accent);
+}
+
+.issue-chevron {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  transition: transform 0.3s var(--ease-standard);
+}
+
+.issue-card.is-expanded .issue-chevron {
+  transform: rotate(180deg);
+  color: var(--color-accent);
+}
+
+/* 높이 0 → 내용 높이로 부드럽게 (grid 행 0fr → 1fr) */
+.issue-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s var(--ease-standard);
+}
+
+.issue-card.is-expanded .issue-panel {
+  grid-template-rows: 1fr;
+}
+
+.issue-panel-clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.issue-panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ---------- 펼친 내용 (한 줄 요약 → 핵심 포인트 → 전개 흐름 → 용어 풀이 → 근거 기사) ---------- */
+
+.issue-section {
+  max-width: 760px; /* 넓은 화면에서도 한 줄이 너무 길지 않게 */
+}
+
+.issue-section-title {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0;
+}
+
+.issue-summary {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--color-accent-soft);
+  color: var(--color-text-strong);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.6;
+}
+
+.issue-points {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  padding-left: 1.25em;
+}
+
+.issue-points li::marker {
+  color: var(--color-accent);
+}
+
+.issue-timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.issue-timeline li {
+  position: relative;
+  padding: 0 0 var(--space-3) var(--space-5);
+}
+
+.issue-timeline li:last-child {
+  padding-bottom: 0;
+}
+
+/* 점과 선으로 시간 순서를 표시 */
+.issue-timeline li::before {
+  content: '';
+  position: absolute;
+  top: 0.55em;
+  left: 2px;
+  width: 9px;
+  height: 9px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+}
+
+.issue-timeline li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: calc(0.55em + 13px);
+  bottom: 2px;
+  left: 6px;
+  width: 1px;
+  background: var(--color-border-strong);
+}
+
+.issue-timeline-date {
+  display: block;
+  color: var(--color-accent);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.6;
+}
+
+.issue-timeline p {
+  margin: 0;
+}
+
+.issue-glossary {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.issue-glossary-item {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+}
+
+.issue-glossary-item dt {
+  color: var(--color-text-strong);
+  font-weight: var(--font-weight-semibold);
+}
+
+.issue-glossary-item dd {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.issue-sources {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.issue-source {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+.issue-source-press {
+  color: var(--color-text-strong);
+  font-weight: var(--font-weight-semibold);
+}
+
+.issue-source-sep,
+.issue-source-time {
+  color: var(--color-text-muted);
+}
+
+.issue-source-link {
+  border-radius: 4px;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-strong);
+  text-underline-offset: 3px;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    text-decoration-color var(--duration-fast) var(--ease-standard);
+}
+
+.issue-source-link:hover {
+  color: var(--color-accent);
+  text-decoration-color: currentColor;
+}
+
+/* ---------- 로딩 스켈레톤 ---------- */
+
+.issue-card--skeleton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 58px;
+  padding: var(--space-4) var(--space-5);
+}
+
+.skeleton-line {
+  flex: 1;
+  max-width: 60%;
+  height: 16px;
+}
+
+.issue-card--skeleton:nth-child(2n) .skeleton-line {
+  max-width: 45%;
+}
+
+.skeleton-dot {
+  width: 20px;
+  height: 20px;
+  margin-left: auto;
+}
+
+/* ---------- 빈 결과 ---------- */
+
+.category-empty {
+  margin: 0;
+  padding: var(--space-7) var(--space-5);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+@media (max-width: 400px) {
+  .issue-toggle {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .issue-panel-content {
+    padding: var(--space-3) var(--space-4) var(--space-4);
+  }
+}

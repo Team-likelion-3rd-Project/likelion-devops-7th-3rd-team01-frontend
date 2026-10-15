@@ -1,0 +1,195 @@
+/* 마이페이지 — index.css의 디자인 토큰만 사용 */
+
+.mypage .page-title {
+  margin-bottom: var(--space-5);
+}
+
+/* ---------- 탭: 밑줄형 (분야 화면의 알약 버튼과 구분) ---------- */
+
+.mypage-tabs {
+  display: flex;
+  gap: var(--space-1);
+  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.mypage-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.mypage-tab {
+  flex-shrink: 0;
+  margin-bottom: -1px; /* 선택 밑줄이 바닥선을 덮도록 */
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.mypage-tab:hover {
+  color: var(--color-text-strong);
+}
+
+.mypage-tab.is-current {
+  border-bottom-color: var(--color-accent);
+  color: var(--color-accent);
+  font-weight: var(--font-weight-bold);
+}
+
+/* ---------- 목록 ---------- */
+
+.mypage-list {
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+  list-style: none;
+  overflow: hidden;
+}
+
+.mypage-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-5);
+}
+
+.mypage-item + .mypage-item {
+  border-top: 1px solid var(--color-border);
+}
+
+.mypage-item-title {
+  margin: 0;
+  color: var(--color-text-strong);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.55;
+}
+
+.mypage-item-link {
+  align-self: flex-start;
+  border-radius: 4px;
+}
+
+.mypage-item-link .mypage-item-title {
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-strong);
+  text-underline-offset: 4px;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    text-decoration-color var(--duration-fast) var(--ease-standard);
+}
+
+.mypage-item-link:hover .mypage-item-title {
+  color: var(--color-accent);
+  text-decoration-color: currentColor;
+}
+
+.mypage-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.mypage-item-press {
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ---------- 질문 처리 상태 ---------- */
+
+.question-status {
+  display: inline-block;
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.7;
+}
+
+.question-status--pending {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.question-status--done {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.question-status--failed {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+/* ---------- 빈 목록 · 실패 ---------- */
+
+.mypage-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-7) var(--space-5);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.mypage-state-message {
+  margin: 0;
+  color: var(--color-text-strong);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.mypage-state-hint {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.mypage-state .page-state-action {
+  margin-top: var(--space-3);
+}
+
+/* ---------- 로딩 스켈레톤 ---------- */
+
+.mypage-item--skeleton {
+  gap: var(--space-3);
+}
+
+.skeleton-bar--wide {
+  width: 70%;
+  height: 16px;
+}
+
+.skeleton-bar--meta {
+  width: 140px;
+  height: 12px;
+}
+
+@media (max-width: 400px) {
+  .mypage-tab {
+    padding: var(--space-3);
+    font-size: var(--font-size-sm);
+  }
+
+  .mypage-item {
+    padding: var(--space-4);
+  }
+}

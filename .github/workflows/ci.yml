@@ -1,5 +1,6 @@
 # PR: 린트·빌드 / develop·main push: 린트·빌드 후 이미지를 GHCR에 올린다 (태그 = 커밋 SHA)
 # 이미지 주소: ghcr.io/<owner>/<repo>:<커밋 SHA> (소문자)
+# develop push는 이미지 업로드 뒤 infra 저장소에 온프렘 배포를 요청한다
 name: ci
 
 on:
@@ -47,3 +48,13 @@ jobs:
             VITE_API_BASE=/api
             VITE_USE_MOCK=false
       - run: echo "이미지 ${IMAGE}:${GITHUB_SHA}" >> "$GITHUB_STEP_SUMMARY"
+      - name: 온프렘 배포 요청 (develop만)
+        if: github.ref == 'refs/heads/develop'
+        env:
+          GH_TOKEN: ${{ secrets.INFRA_DISPATCH_TOKEN }}
+        run: |
+          gh api repos/Team-likelion-3rd-Project/likelion-devops-7th-3rd-team01-infra/dispatches \
+            -f event_type=deploy-onprem \
+            -f "client_payload[app]=frontend" \
+            -f "client_payload[sha]=${GITHUB_SHA}"
+          echo "온프렘 배포 요청: frontend ${GITHUB_SHA}" >> "$GITHUB_STEP_SUMMARY"

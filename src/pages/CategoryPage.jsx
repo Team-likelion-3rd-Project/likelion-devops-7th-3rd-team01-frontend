@@ -405,7 +405,7 @@ function IssueItem({ issue, expanded, onToggle, now, canSave, savedUrls, pending
                       {canSave && (
                         <button
                           type="button"
-                          className="issue-source-save"
+                          className={`issue-source-save${savedUrls.has(source.url) ? ' is-saved' : ''}`}
                           disabled={pendingUrls.has(source.url)}
                           onClick={() => onToggleSave(source)}
                         >

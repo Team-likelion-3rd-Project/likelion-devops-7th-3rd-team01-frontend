@@ -26,7 +26,7 @@ function QuestionActions({ item, busy, onToggleSaved, onDelete }) {
     <div className="mypage-item-actions">
       <button
         type="button"
-        className="mypage-item-action"
+        className={`mypage-item-action${item.saved ? ' is-saved' : ''}`}
         disabled={busy}
         onClick={() => onToggleSaved(item)}
       >
@@ -35,7 +35,7 @@ function QuestionActions({ item, busy, onToggleSaved, onDelete }) {
       </button>
       <button
         type="button"
-        className="mypage-item-action"
+        className="mypage-item-action mypage-item-action--danger"
         disabled={busy}
         onClick={() => onDelete(item)}
       >

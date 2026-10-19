@@ -7,6 +7,7 @@ import {
   fetchSavedArticles,
   fetchSavedQuestions,
   saveQuestion,
+  unsaveArticle,
   unsaveQuestion,
 } from '../api.js'
 import { useAuth } from '../authContext.js'
@@ -72,7 +73,7 @@ function SavedQuestionItem({ item, busy, onToggleSaved, onDelete }) {
   )
 }
 
-function SavedArticleItem({ item }) {
+function SavedArticleItem({ item, busy, onUnsave }) {
   return (
     <li className="mypage-item">
       <a href={item.url} target="_blank" rel="noopener noreferrer" className="mypage-item-link">
@@ -82,6 +83,17 @@ function SavedArticleItem({ item }) {
       <div className="mypage-item-meta">
         <span className="mypage-item-press">{item.press}</span>
         <time dateTime={item.savedAt}>{formatDateTime(item.savedAt)} 저장</time>
+      </div>
+      <div className="mypage-item-actions">
+        <button
+          type="button"
+          className="mypage-item-action"
+          disabled={busy}
+          onClick={() => onUnsave(item)}
+        >
+          저장 해제
+          <span className="visually-hidden"> ({item.title})</span>
+        </button>
       </div>
     </li>
   )
@@ -227,6 +239,22 @@ function TabPanel({ tab }) {
     )
   }
 
+  const unsaveSavedArticle = (item) => {
+    const id = tab.getKey(item)
+    runAction(
+      item,
+      async () => {
+        try {
+          await unsaveArticle(item.url)
+        } catch (e) {
+          // 다른 화면에서 이미 해제했으면(404) 목록에서만 빼면 된다
+          if (!(e instanceof ApiError && e.status === 404)) throw e
+        }
+      },
+      (items) => items.filter((i) => tab.getKey(i) !== id),
+    )
+  }
+
   if (state.status === 'loading') {
     return (
       <>
@@ -293,6 +321,7 @@ function TabPanel({ tab }) {
             busy={busyIds.has(tab.getKey(item))}
             onToggleSaved={toggleSaved}
             onDelete={removeQuestion}
+            onUnsave={unsaveSavedArticle}
           />
         ))}
       </ul>

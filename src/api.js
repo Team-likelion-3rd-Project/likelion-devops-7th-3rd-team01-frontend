@@ -103,6 +103,39 @@ export async function fetchSavedArticles(page = 0) {
   return trackMock(await request(`/mypage/saved-articles?page=${page}`))
 }
 
+// ---------- 저장 · 삭제 ----------
+// 성공하면 본문 없이 204가 와서 request()가 null을 돌려준다.
+
+export async function saveQuestion(questionId) {
+  if (USE_MOCK) return null
+  return request(`/questions/${encodeURIComponent(questionId)}/saved`, { method: 'PUT' })
+}
+
+export async function unsaveQuestion(questionId) {
+  if (USE_MOCK) return null
+  return request(`/questions/${encodeURIComponent(questionId)}/saved`, { method: 'DELETE' })
+}
+
+export async function deleteQuestion(questionId) {
+  if (USE_MOCK) return null
+  return request(`/questions/${encodeURIComponent(questionId)}`, { method: 'DELETE' })
+}
+
+// 로그인한 사용자가 저장한 기사 URL 목록 (비로그인이면 호출하지 않는다)
+export async function fetchSavedArticleUrls() {
+  if (USE_MOCK) return { urls: [] }
+  return request('/saved-articles/urls')
+}
+
+export async function saveArticle({ title, url, press, publishedAt }) {
+  if (USE_MOCK) return null
+  return request('/saved-articles', { method: 'PUT', body: { title, url, press, publishedAt } })
+}
+
+export async function unsaveArticle(url) {
+  if (USE_MOCK) return null
+  return request(`/saved-articles?url=${encodeURIComponent(url)}`, { method: 'DELETE' })
+}
 
 // ---------- 인증 ----------
 // 실제 API: POST /auth/signup, POST /auth/login, POST /auth/logout, GET /auth/me

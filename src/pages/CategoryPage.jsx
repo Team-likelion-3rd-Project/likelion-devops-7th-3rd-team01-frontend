@@ -1,6 +1,13 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { fetchCategory } from '../api.js'
+import {
+  ApiError,
+  fetchCategory,
+  fetchSavedArticleUrls,
+  saveArticle,
+  unsaveArticle,
+} from '../api.js'
+import { useAuth } from '../authContext.js'
 import { CATEGORIES, getCategoryLabel, isValidCategory } from '../categories.js'
 import ChatInput from '../components/ChatInput.jsx'
 import { useReveal } from '../hooks/useReveal.js'
@@ -102,6 +109,11 @@ function CategoryContent({ code }) {
   const scrolledRef = useRef(false)
   const openScrollTimerRef = useRef(0)
 
+  const { user, expire } = useAuth()
+  const [savedUrls, setSavedUrls] = useState(() => new Set())
+  const [pendingUrls, setPendingUrls] = useState(() => new Set())
+  const [saveError, setSaveError] = useState('')
+
   useEffect(() => () => clearTimeout(openScrollTimerRef.current), [])
 
   useEffect(() => {
@@ -124,6 +136,54 @@ function CategoryContent({ code }) {
       ignore = true
     }
   }, [code, attempt])
+
+  // 로그인한 경우에만 저장한 기사 URL 목록을 받아 온다
+  useEffect(() => {
+    if (!user) return
+    let ignore = false
+    fetchSavedArticleUrls().then(
+      (data) => {
+        if (!ignore) setSavedUrls(new Set(data.urls ?? []))
+      },
+      (e) => {
+        // 로그인이 만료됐으면 앱의 로그인 상태도 지운다. 그 밖의 실패는 버튼이 "저장" 상태로 보인다.
+        if (!ignore && e instanceof ApiError && e.status === 401) expire()
+      },
+    )
+    return () => {
+      ignore = true
+    }
+  }, [user, expire])
+
+  const toggleSave = async (source) => {
+    if (pendingUrls.has(source.url)) return
+    const wasSaved = savedUrls.has(source.url)
+    setSaveError('')
+    setPendingUrls((prev) => new Set(prev).add(source.url))
+    try {
+      if (wasSaved) await unsaveArticle(source.url)
+      else await saveArticle(source)
+      setSavedUrls((prev) => {
+        const next = new Set(prev)
+        if (wasSaved) next.delete(source.url)
+        else next.add(source.url)
+        return next
+      })
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 401) expire()
+      setSaveError(
+        e instanceof ApiError && e.status === 401
+          ? '로그인이 필요해요'
+          : '저장하지 못했어요. 잠시 후 다시 시도해 주세요.',
+      )
+    } finally {
+      setPendingUrls((prev) => {
+        const next = new Set(prev)
+        next.delete(source.url)
+        return next
+      })
+    }
+  }
 
   const retry = () => {
     setState({ status: 'loading' })
@@ -183,6 +243,12 @@ function CategoryContent({ code }) {
 
       <CategoryNav current={code} />
 
+      {saveError && (
+        <p className="stale-notice swap-in" role="alert">
+          {saveError}
+        </p>
+      )}
+
       {state.status === 'loading' && (
         <>
           <span className="visually-hidden" role="status">
@@ -221,6 +287,10 @@ function CategoryContent({ code }) {
               expanded={openId === issue.issueId}
               onToggle={toggleIssue}
               now={state.fetchedAt}
+              canSave={Boolean(user)}
+              savedUrls={savedUrls}
+              pendingUrls={pendingUrls}
+              onToggleSave={toggleSave}
             />
           ))}
         </ul>
@@ -231,7 +301,7 @@ function CategoryContent({ code }) {
   )
 }
 
-function IssueItem({ issue, expanded, onToggle, now }) {
+function IssueItem({ issue, expanded, onToggle, now, canSave, savedUrls, pendingUrls, onToggleSave }) {
   const buttonId = `issue-${issue.issueId}-button`
   const panelId = `issue-${issue.issueId}-panel`
   const { summary, keyPoints = [], timeline = [], glossary = [], sources = [] } = issue
@@ -332,6 +402,17 @@ function IssueItem({ issue, expanded, onToggle, now }) {
                       <time className="issue-source-time" dateTime={source.publishedAt}>
                         {formatRelativeTime(source.publishedAt, now)}
                       </time>
+                      {canSave && (
+                        <button
+                          type="button"
+                          className={`issue-source-save${savedUrls.has(source.url) ? ' is-saved' : ''}`}
+                          disabled={pendingUrls.has(source.url)}
+                          onClick={() => onToggleSave(source)}
+                        >
+                          {savedUrls.has(source.url) ? '저장됨' : '저장'}
+                          <span className="visually-hidden"> ({source.title})</span>
+                        </button>
+                      )}
                     </li>
                   ))}
                 </ul>

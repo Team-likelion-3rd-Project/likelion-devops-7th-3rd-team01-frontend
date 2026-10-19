@@ -79,23 +79,63 @@ export async function fetchCategory(code) {
 }
 
 // ---------- 마이페이지 ----------
-// TODO: 실제 엔드포인트 경로는 백엔드 API 명세가 나오면 맞출 것 (응답 형태: { items: [...] })
+// 응답: { questions: [...], hasNext } / { articles: [...], hasNext }
+// page는 0부터 시작하고, hasNext가 true이면 다음 페이지가 있다.
 
-export async function fetchMyQuestions() {
-  if (USE_MOCK) return trackMock(withMockMeta({ items: mypageMock.questions }))
-  return trackMock(await request('/me/questions'))
+export async function fetchMyQuestions(page = 0) {
+  if (USE_MOCK) {
+    return trackMock(withMockMeta({ questions: mypageMock.questions, hasNext: false }))
+  }
+  return trackMock(await request(`/mypage/questions?page=${page}`))
 }
 
-export async function fetchSavedQuestions() {
-  if (USE_MOCK) return trackMock(withMockMeta({ items: mypageMock.savedQuestions }))
-  return trackMock(await request('/me/saved-questions'))
+export async function fetchSavedQuestions(page = 0) {
+  if (USE_MOCK) {
+    return trackMock(withMockMeta({ questions: mypageMock.savedQuestions, hasNext: false }))
+  }
+  return trackMock(await request(`/mypage/saved-questions?page=${page}`))
 }
 
-export async function fetchSavedArticles() {
-  if (USE_MOCK) return trackMock(withMockMeta({ items: mypageMock.savedArticles }))
-  return trackMock(await request('/me/saved-articles'))
+export async function fetchSavedArticles(page = 0) {
+  if (USE_MOCK) {
+    return trackMock(withMockMeta({ articles: mypageMock.savedArticles, hasNext: false }))
+  }
+  return trackMock(await request(`/mypage/saved-articles?page=${page}`))
 }
 
+// ---------- 저장 · 삭제 ----------
+// 성공하면 본문 없이 204가 와서 request()가 null을 돌려준다.
+
+export async function saveQuestion(questionId) {
+  if (USE_MOCK) return null
+  return request(`/questions/${encodeURIComponent(questionId)}/saved`, { method: 'PUT' })
+}
+
+export async function unsaveQuestion(questionId) {
+  if (USE_MOCK) return null
+  return request(`/questions/${encodeURIComponent(questionId)}/saved`, { method: 'DELETE' })
+}
+
+export async function deleteQuestion(questionId) {
+  if (USE_MOCK) return null
+  return request(`/questions/${encodeURIComponent(questionId)}`, { method: 'DELETE' })
+}
+
+// 로그인한 사용자가 저장한 기사 URL 목록 (비로그인이면 호출하지 않는다)
+export async function fetchSavedArticleUrls() {
+  if (USE_MOCK) return { urls: [] }
+  return request('/saved-articles/urls')
+}
+
+export async function saveArticle({ title, url, press, publishedAt }) {
+  if (USE_MOCK) return null
+  return request('/saved-articles', { method: 'PUT', body: { title, url, press, publishedAt } })
+}
+
+export async function unsaveArticle(url) {
+  if (USE_MOCK) return null
+  return request(`/saved-articles?url=${encodeURIComponent(url)}`, { method: 'DELETE' })
+}
 
 // ---------- 인증 ----------
 // 실제 API: POST /auth/signup, POST /auth/login, POST /auth/logout, GET /auth/me

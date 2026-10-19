@@ -47,9 +47,14 @@ export default function AuthProvider({ children }) {
     setUser(null)
   }, [])
 
+  // 서버가 401(로그인 만료)을 줬을 때 호출한다. 서버 요청 없이 앱의 로그인 상태만 지운다.
+  const expire = useCallback(() => {
+    setUser(null)
+  }, [])
+
   const value = useMemo(
-    () => ({ user, loading, login, signup, logout }),
-    [user, loading, login, signup, logout],
+    () => ({ user, loading, login, signup, logout, expire }),
+    [user, loading, login, signup, logout, expire],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

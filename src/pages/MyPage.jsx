@@ -5,8 +5,10 @@ import { formatDateTime } from '../time.js'
 import './MyPage.css'
 
 const QUESTION_STATUS = {
-  PENDING: { label: '처리 중', tone: 'pending' },
-  DONE: { label: '완료', tone: 'done' },
+  PENDING: { label: '대기 중', tone: 'pending' },
+  PROCESSING: { label: '답변 만드는 중', tone: 'pending' },
+  COMPLETED: { label: '완료', tone: 'done' },
+  REJECTED: { label: '답할 수 없는 질문', tone: 'failed' },
   FAILED: { label: '실패', tone: 'failed' },
 }
 
@@ -14,7 +16,7 @@ function QuestionItem({ item }) {
   const status = QUESTION_STATUS[item.status] ?? QUESTION_STATUS.PENDING
   return (
     <li className="mypage-item">
-      <p className="mypage-item-title">{item.content}</p>
+      <p className="mypage-item-title">{item.query}</p>
       <div className="mypage-item-meta">
         <span className={`question-status question-status--${status.tone}`}>{status.label}</span>
         <time dateTime={item.createdAt}>{formatDateTime(item.createdAt)}</time>
@@ -26,9 +28,9 @@ function QuestionItem({ item }) {
 function SavedQuestionItem({ item }) {
   return (
     <li className="mypage-item">
-      <p className="mypage-item-title">{item.content}</p>
+      <p className="mypage-item-title">{item.query}</p>
       <div className="mypage-item-meta">
-        <time dateTime={item.savedAt}>{formatDateTime(item.savedAt)} 저장</time>
+        <time dateTime={item.createdAt}>{formatDateTime(item.createdAt)}</time>
       </div>
     </li>
   )
@@ -52,6 +54,7 @@ function SavedArticleItem({ item }) {
 const TABS = [
   {
     key: 'questions',
+    listKey: 'questions',
     label: '질문 목록',
     fetch: fetchMyQuestions,
     Item: QuestionItem,
@@ -60,6 +63,7 @@ const TABS = [
   },
   {
     key: 'saved-questions',
+    listKey: 'questions',
     label: '저장한 질문',
     fetch: fetchSavedQuestions,
     Item: SavedQuestionItem,
@@ -68,10 +72,11 @@ const TABS = [
   },
   {
     key: 'saved-articles',
+    listKey: 'articles',
     label: '저장한 기사',
     fetch: fetchSavedArticles,
     Item: SavedArticleItem,
-    getKey: (item) => item.articleId,
+    getKey: (item) => item.savedArticleId,
     empty: { message: '저장한 기사가 없어요', hint: '나중에 읽을 기사를 저장하면 여기에 모여요.' },
   },
 ]
@@ -84,9 +89,18 @@ function TabPanel({ tab }) {
 
   useEffect(() => {
     let ignore = false
-    tab.fetch().then(
+    tab.fetch(0).then(
       (data) => {
-        if (!ignore) setState({ status: 'success', items: data.items ?? [] })
+        if (!ignore) {
+          setState({
+            status: 'success',
+            items: data[tab.listKey] ?? [],
+            hasNext: data.hasNext === true,
+            page: 0,
+            loadingMore: false,
+            moreError: false,
+          })
+        }
       },
       () => {
         if (!ignore) setState({ status: 'error' })
@@ -96,6 +110,30 @@ function TabPanel({ tab }) {
       ignore = true
     }
   }, [tab, attempt])
+
+  const loadMore = () => {
+    const nextPage = state.page + 1
+    setState((prev) => ({ ...prev, loadingMore: true, moreError: false }))
+    tab.fetch(nextPage).then(
+      (data) => {
+        setState((prev) => {
+          // 목록이 중간에 바뀌어 같은 항목이 또 오면 건너뛴다
+          const seen = new Set(prev.items.map(tab.getKey))
+          const added = (data[tab.listKey] ?? []).filter((item) => !seen.has(tab.getKey(item)))
+          return {
+            ...prev,
+            items: [...prev.items, ...added],
+            hasNext: data.hasNext === true,
+            page: nextPage,
+            loadingMore: false,
+          }
+        })
+      },
+      () => {
+        setState((prev) => ({ ...prev, loadingMore: false, moreError: true }))
+      },
+    )
+  }
 
   if (state.status === 'loading') {
     return (
@@ -149,11 +187,28 @@ function TabPanel({ tab }) {
 
   const { Item } = tab
   return (
-    <ul className="mypage-list swap-in">
-      {state.items.map((item) => (
-        <Item key={tab.getKey(item)} item={item} />
-      ))}
-    </ul>
+    <>
+      <ul className="mypage-list swap-in">
+        {state.items.map((item) => (
+          <Item key={tab.getKey(item)} item={item} />
+        ))}
+      </ul>
+      {state.moreError && (
+        <p className="mypage-state-hint" role="alert">
+          더 불러오지 못했어요. 다시 눌러 주세요.
+        </p>
+      )}
+      {state.hasNext && (
+        <button
+          type="button"
+          className="page-state-action"
+          onClick={loadMore}
+          disabled={state.loadingMore}
+        >
+          {state.loadingMore ? '불러오는 중…' : '더 보기'}
+        </button>
+      )}
+    </>
   )
 }
 

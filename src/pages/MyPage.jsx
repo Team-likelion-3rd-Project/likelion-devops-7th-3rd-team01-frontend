@@ -9,6 +9,7 @@ import {
   saveQuestion,
   unsaveQuestion,
 } from '../api.js'
+import { useAuth } from '../authContext.js'
 import { formatDateTime } from '../time.js'
 import './MyPage.css'
 
@@ -124,6 +125,7 @@ function TabPanel({ tab }) {
   const [attempt, setAttempt] = useState(0)
   const [busyIds, setBusyIds] = useState(() => new Set())
   const [actionError, setActionError] = useState('')
+  const { expire } = useAuth()
 
   useEffect(() => {
     let ignore = false
@@ -140,14 +142,19 @@ function TabPanel({ tab }) {
           })
         }
       },
-      () => {
-        if (!ignore) setState({ status: 'error' })
+      (e) => {
+        if (ignore) return
+        if (e instanceof ApiError && e.status === 401) {
+          expire() // 로그인 상태를 지우면 RequireAuth가 로그인 화면으로 보낸다
+          return
+        }
+        setState({ status: 'error' })
       },
     )
     return () => {
       ignore = true
     }
-  }, [tab, attempt])
+  }, [tab, attempt, expire])
 
   const loadMore = () => {
     const nextPage = state.page + 1
@@ -183,11 +190,11 @@ function TabPanel({ tab }) {
       await request()
       setState((prev) => ({ ...prev, items: applyToItems(prev.items) }))
     } catch (e) {
-      setActionError(
-        e instanceof ApiError && e.status === 401
-          ? '로그인이 필요해요'
-          : '요청을 처리하지 못했어요. 잠시 후 다시 시도해 주세요.',
-      )
+      if (e instanceof ApiError && e.status === 401) {
+        expire()
+        return
+      }
+      setActionError('요청을 처리하지 못했어요. 잠시 후 다시 시도해 주세요.')
     } finally {
       setBusyIds((prev) => {
         const next = new Set(prev)
@@ -309,7 +316,6 @@ function TabPanel({ tab }) {
 }
 
 export default function MyPage() {
-  // TODO(#25): 로그인 여부 확인 후 비로그인이면 로그인 화면으로 보내기
   const [searchParams, setSearchParams] = useSearchParams()
   const current = TABS.find((t) => t.key === searchParams.get('tab')) ?? DEFAULT_TAB
   const tabRefs = useRef({})

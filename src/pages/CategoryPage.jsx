@@ -109,7 +109,7 @@ function CategoryContent({ code }) {
   const scrolledRef = useRef(false)
   const openScrollTimerRef = useRef(0)
 
-  const { user } = useAuth()
+  const { user, expire } = useAuth()
   const [savedUrls, setSavedUrls] = useState(() => new Set())
   const [pendingUrls, setPendingUrls] = useState(() => new Set())
   const [saveError, setSaveError] = useState('')
@@ -145,14 +145,15 @@ function CategoryContent({ code }) {
       (data) => {
         if (!ignore) setSavedUrls(new Set(data.urls ?? []))
       },
-      () => {
-        // 실패해도 버튼은 "저장" 상태로 보인다
+      (e) => {
+        // 로그인이 만료됐으면 앱의 로그인 상태도 지운다. 그 밖의 실패는 버튼이 "저장" 상태로 보인다.
+        if (!ignore && e instanceof ApiError && e.status === 401) expire()
       },
     )
     return () => {
       ignore = true
     }
-  }, [user])
+  }, [user, expire])
 
   const toggleSave = async (source) => {
     if (pendingUrls.has(source.url)) return
@@ -169,6 +170,7 @@ function CategoryContent({ code }) {
         return next
       })
     } catch (e) {
+      if (e instanceof ApiError && e.status === 401) expire()
       setSaveError(
         e instanceof ApiError && e.status === 401
           ? '로그인이 필요해요'

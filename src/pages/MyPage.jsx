@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { fetchMyQuestions, fetchSavedArticles, fetchSavedQuestions } from '../api.js'
+import {
+  ApiError,
+  deleteQuestion,
+  fetchMyQuestions,
+  fetchSavedArticles,
+  fetchSavedQuestions,
+  saveQuestion,
+  unsaveQuestion,
+} from '../api.js'
 import { formatDateTime } from '../time.js'
 import './MyPage.css'
 
@@ -12,7 +20,32 @@ const QUESTION_STATUS = {
   FAILED: { label: '실패', tone: 'failed' },
 }
 
-function QuestionItem({ item }) {
+function QuestionActions({ item, busy, onToggleSaved, onDelete }) {
+  return (
+    <div className="mypage-item-actions">
+      <button
+        type="button"
+        className="mypage-item-action"
+        disabled={busy}
+        onClick={() => onToggleSaved(item)}
+      >
+        {item.saved ? '저장됨' : '저장'}
+        <span className="visually-hidden"> ({item.query})</span>
+      </button>
+      <button
+        type="button"
+        className="mypage-item-action"
+        disabled={busy}
+        onClick={() => onDelete(item)}
+      >
+        삭제
+        <span className="visually-hidden"> ({item.query})</span>
+      </button>
+    </div>
+  )
+}
+
+function QuestionItem({ item, busy, onToggleSaved, onDelete }) {
   const status = QUESTION_STATUS[item.status] ?? QUESTION_STATUS.PENDING
   return (
     <li className="mypage-item">
@@ -21,17 +54,19 @@ function QuestionItem({ item }) {
         <span className={`question-status question-status--${status.tone}`}>{status.label}</span>
         <time dateTime={item.createdAt}>{formatDateTime(item.createdAt)}</time>
       </div>
+      <QuestionActions item={item} busy={busy} onToggleSaved={onToggleSaved} onDelete={onDelete} />
     </li>
   )
 }
 
-function SavedQuestionItem({ item }) {
+function SavedQuestionItem({ item, busy, onToggleSaved, onDelete }) {
   return (
     <li className="mypage-item">
       <p className="mypage-item-title">{item.query}</p>
       <div className="mypage-item-meta">
         <time dateTime={item.createdAt}>{formatDateTime(item.createdAt)}</time>
       </div>
+      <QuestionActions item={item} busy={busy} onToggleSaved={onToggleSaved} onDelete={onDelete} />
     </li>
   )
 }
@@ -68,6 +103,7 @@ const TABS = [
     fetch: fetchSavedQuestions,
     Item: SavedQuestionItem,
     getKey: (item) => item.questionId,
+    removeOnUnsave: true,
     empty: { message: '저장한 질문이 없어요', hint: '다시 보고 싶은 질문을 저장하면 여기에 모여요.' },
   },
   {
@@ -86,6 +122,8 @@ const DEFAULT_TAB = TABS[0]
 function TabPanel({ tab }) {
   const [state, setState] = useState({ status: 'loading' })
   const [attempt, setAttempt] = useState(0)
+  const [busyIds, setBusyIds] = useState(() => new Set())
+  const [actionError, setActionError] = useState('')
 
   useEffect(() => {
     let ignore = false
@@ -132,6 +170,53 @@ function TabPanel({ tab }) {
       () => {
         setState((prev) => ({ ...prev, loadingMore: false, moreError: true }))
       },
+    )
+  }
+
+  // 서버 요청이 성공한 뒤에만 화면 목록을 바꾼다. 요청 중에는 그 항목의 버튼을 잠근다.
+  const runAction = async (item, request, applyToItems) => {
+    const id = tab.getKey(item)
+    if (busyIds.has(id)) return
+    setActionError('')
+    setBusyIds((prev) => new Set(prev).add(id))
+    try {
+      await request()
+      setState((prev) => ({ ...prev, items: applyToItems(prev.items) }))
+    } catch (e) {
+      setActionError(
+        e instanceof ApiError && e.status === 401
+          ? '로그인이 필요해요'
+          : '요청을 처리하지 못했어요. 잠시 후 다시 시도해 주세요.',
+      )
+    } finally {
+      setBusyIds((prev) => {
+        const next = new Set(prev)
+        next.delete(id)
+        return next
+      })
+    }
+  }
+
+  const toggleSaved = (item) => {
+    const id = tab.getKey(item)
+    const nowSaved = !item.saved
+    runAction(
+      item,
+      () => (nowSaved ? saveQuestion(id) : unsaveQuestion(id)),
+      (items) =>
+        tab.removeOnUnsave && !nowSaved
+          ? items.filter((i) => tab.getKey(i) !== id)
+          : items.map((i) => (tab.getKey(i) === id ? { ...i, saved: nowSaved } : i)),
+    )
+  }
+
+  const removeQuestion = (item) => {
+    if (!window.confirm('이 질문을 삭제할까요? 삭제하면 되돌릴 수 없어요.')) return
+    const id = tab.getKey(item)
+    runAction(
+      item,
+      () => deleteQuestion(id),
+      (items) => items.filter((i) => tab.getKey(i) !== id),
     )
   }
 
@@ -188,9 +273,20 @@ function TabPanel({ tab }) {
   const { Item } = tab
   return (
     <>
+      {actionError && (
+        <p className="mypage-state-hint" role="alert">
+          {actionError}
+        </p>
+      )}
       <ul className="mypage-list swap-in">
         {state.items.map((item) => (
-          <Item key={tab.getKey(item)} item={item} />
+          <Item
+            key={tab.getKey(item)}
+            item={item}
+            busy={busyIds.has(tab.getKey(item))}
+            onToggleSaved={toggleSaved}
+            onDelete={removeQuestion}
+          />
         ))}
       </ul>
       {state.moreError && (

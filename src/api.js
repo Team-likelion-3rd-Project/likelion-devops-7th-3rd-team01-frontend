@@ -103,6 +103,120 @@ export async function fetchSavedArticles(page = 0) {
   return trackMock(await request(`/mypage/saved-articles?page=${page}`))
 }
 
+// ---------- 질문하기 ----------
+// POST /questions { query 1~500자 } → 202 { questionId, status: 'PENDING' }
+// GET /questions/{id} → { questionId, status, query, answer, sources, saved, createdAt, completedAt }
+// status: PENDING / PROCESSING / COMPLETED / REJECTED / FAILED
+// 처리 중(PENDING, PROCESSING)에는 answer와 sources가 null이다.
+export const QUESTION_DONE_STATUSES = ['COMPLETED', 'REJECTED', 'FAILED']
+
+// 샘플 모드: 질문에 들어간 말로 상황을 흉내 낸다.
+// "제한" → 하루 제한(429), "느림" → 계속 처리 중, "실패" → FAILED,
+// "거절" → REJECTED, "없음" → 관련 기사 없음, 그 외 → 정상 답변
+const mockQuestions = new Map()
+let mockQuestionSeq = 0
+
+const MOCK_SOURCES = [
+  {
+    press: '샘플일보',
+    title: '샘플 기사 하나',
+    url: 'https://example.com/news/1',
+    publishedAt: '2026-10-19T09:00:00+09:00',
+  },
+  {
+    press: '샘플일보',
+    title: '샘플 기사 둘',
+    url: 'https://example.com/news/2',
+    publishedAt: '2026-10-18T15:30:00+09:00',
+  },
+  {
+    press: '샘플IT',
+    title: '샘플 기사 셋',
+    url: 'https://example.com/news/3',
+    publishedAt: '2026-10-17T11:10:00+09:00',
+  },
+]
+
+function mockScenario(query) {
+  if (query.includes('느림')) return 'slow'
+  if (query.includes('실패')) return 'fail'
+  if (query.includes('거절')) return 'reject'
+  if (query.includes('없음')) return 'empty'
+  return 'ok'
+}
+
+// 만든 지 1초까지 PENDING, 3초까지 PROCESSING, 그 뒤에 끝난다
+function mockQuestionView(item) {
+  const elapsed = Date.now() - item.startedAt
+  const base = {
+    questionId: item.id,
+    query: item.query,
+    saved: false,
+    createdAt: new Date(item.startedAt).toISOString(),
+    answer: null,
+    sources: null,
+    completedAt: null,
+  }
+  if (item.scenario === 'slow') return { ...base, status: 'PROCESSING' }
+  if (elapsed < 1000) return { ...base, status: 'PENDING' }
+  if (elapsed < 3000) return { ...base, status: 'PROCESSING' }
+
+  const completedAt = new Date(item.startedAt + 3000).toISOString()
+  switch (item.scenario) {
+    case 'fail':
+      return { ...base, status: 'FAILED', completedAt }
+    case 'reject':
+      return {
+        ...base,
+        status: 'REJECTED',
+        answer: '뉴스와 관련된 질문에만 답할 수 있어요.',
+        completedAt,
+      }
+    case 'empty':
+      return {
+        ...base,
+        status: 'COMPLETED',
+        answer: '[샘플 답변] 관련 기사를 찾지 못했어요.',
+        sources: [],
+        completedAt,
+      }
+    default:
+      return {
+        ...base,
+        status: 'COMPLETED',
+        answer: `[샘플 답변] '${item.query}'와 관련된 기사 ${MOCK_SOURCES.length}건을 찾았어요.`,
+        sources: MOCK_SOURCES,
+        completedAt,
+      }
+  }
+}
+
+export async function createQuestion(query) {
+  if (USE_MOCK) {
+    if (query.includes('제한')) {
+      throw new ApiError(429, 'RATE_LIMIT_EXCEEDED', '오늘 할 수 있는 질문을 모두 사용했어요')
+    }
+    mockQuestionSeq += 1
+    mockQuestions.set(String(mockQuestionSeq), {
+      id: mockQuestionSeq,
+      query,
+      scenario: mockScenario(query),
+      startedAt: Date.now(),
+    })
+    return { questionId: mockQuestionSeq, status: 'PENDING' }
+  }
+  return request('/questions', { method: 'POST', body: { query } })
+}
+
+export async function fetchQuestion(questionId) {
+  if (USE_MOCK) {
+    const item = mockQuestions.get(String(questionId))
+    if (!item) throw new ApiError(404, 'NOT_FOUND', '질문을 찾을 수 없어요')
+    return mockQuestionView(item)
+  }
+  return request(`/questions/${encodeURIComponent(questionId)}`)
+}
+
 // ---------- 저장 · 삭제 ----------
 // 성공하면 본문 없이 204가 와서 request()가 null을 돌려준다.
 

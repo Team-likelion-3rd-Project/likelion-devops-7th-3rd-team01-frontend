@@ -681,3 +681,12 @@ h3 {
     transform: none;
   }
 }
+
+.chat-input-error {
+  margin: 8px 8px 0;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+}

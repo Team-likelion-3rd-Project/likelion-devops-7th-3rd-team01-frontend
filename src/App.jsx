@@ -6,6 +6,7 @@ import CategoryPage from './pages/CategoryPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import SignupPage from './pages/SignupPage.jsx'
 import MyPage from './pages/MyPage.jsx'
+import QuestionPage from './pages/QuestionPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
         {/* 로그인이 필요한 화면은 여기에 넣는다 */}
         <Route element={<RequireAuth />}>
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/questions/:id" element={<QuestionPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Route>

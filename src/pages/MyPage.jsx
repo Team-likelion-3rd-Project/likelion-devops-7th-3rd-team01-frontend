@@ -51,7 +51,9 @@ function QuestionItem({ item, busy, onToggleSaved, onDelete }) {
   const status = QUESTION_STATUS[item.status] ?? QUESTION_STATUS.PENDING
   return (
     <li className="mypage-item">
-      <p className="mypage-item-title">{item.query}</p>
+      <Link to={`/questions/${item.questionId}`} className="mypage-item-link">
+        <span className="mypage-item-title">{item.query}</span>
+      </Link>
       <div className="mypage-item-meta">
         <span className={`question-status question-status--${status.tone}`}>{status.label}</span>
         <time dateTime={item.createdAt}>{formatDateTime(item.createdAt)}</time>
@@ -64,7 +66,9 @@ function QuestionItem({ item, busy, onToggleSaved, onDelete }) {
 function SavedQuestionItem({ item, busy, onToggleSaved, onDelete }) {
   return (
     <li className="mypage-item">
-      <p className="mypage-item-title">{item.query}</p>
+      <Link to={`/questions/${item.questionId}`} className="mypage-item-link">
+        <span className="mypage-item-title">{item.query}</span>
+      </Link>
       <div className="mypage-item-meta">
         <time dateTime={item.createdAt}>{formatDateTime(item.createdAt)}</time>
       </div>

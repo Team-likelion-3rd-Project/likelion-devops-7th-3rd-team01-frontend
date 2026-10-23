@@ -1,0 +1,72 @@
+name: 버그 리포트
+description: 동작하지 않는 문제를 등록합니다.
+title: "[BUG] "
+labels: ["fix"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 버그 설명
+      description: 무엇이 잘못 동작하는지 씁니다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 재현 절차
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 기대 동작
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 실제 동작
+      description: 에러 메시지, 로그, 스크린샷을 첨부합니다.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 영역
+      options:
+        - frontend
+        - backend
+        - infra
+        - design
+        - db
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 심각도
+      options:
+        - P0 (서비스 중단 / 배포 불가)
+        - P1 (핵심 기능 불가)
+        - P2 (일부 기능 불편)
+        - P3 (사소한 문제)
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 환경
+      value: |
+        - 브랜치/커밋:
+        - OS / 브라우저:
+        - 배포 환경: local / dev / demo

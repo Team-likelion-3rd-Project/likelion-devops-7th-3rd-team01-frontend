@@ -26,7 +26,7 @@ export default function Header() {
       <div className="header-inner">
         <div className="header-brand">
           <Link to="/" className="header-title">
-            IT 브리핑
+            IT 브리핑 · 배포 테스트 1
           </Link>
           {generatedLabel && (
             <time className="header-time" dateTime={generatedAt}>

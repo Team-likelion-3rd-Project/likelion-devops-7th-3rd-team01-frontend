@@ -5,7 +5,7 @@ IT 뉴스 요약을 보여 주고, 기사 근거로 질문에 답하는 서비�
 - 프로젝트 소개·위키·이슈: [likelion-devops-7th-3rd-team01](https://github.com/Team-likelion-3rd-Project/likelion-devops-7th-3rd-team01)
 - 백엔드(API·워커·요약 배치): [likelion-devops-7th-3rd-team01-backend](https://github.com/Team-likelion-3rd-Project/likelion-devops-7th-3rd-team01-backend)
 - 배포(Helm 차트, Argo CD, Terraform): [likelion-devops-7th-3rd-team01-infra](https://github.com/Team-likelion-3rd-Project/likelion-devops-7th-3rd-team01-infra)
-- API 명세·UI 화면·성능 테스트: 위키
+- 위키: [API 명세](https://github.com/Team-likelion-3rd-Project/likelion-devops-7th-3rd-team01/wiki/API-Specification) · [UI 화면](https://github.com/Team-likelion-3rd-Project/likelion-devops-7th-3rd-team01/wiki/UI-Screens) · [성능 테스트](https://github.com/Team-likelion-3rd-Project/likelion-devops-7th-3rd-team01/wiki/%EC%84%B1%EB%8A%A5-%ED%85%8C%EC%8A%A4%ED%8A%B8)
 
 ## 기술 구성
 
@@ -75,7 +75,7 @@ npm run build          # 빌드 (dist/)
 
 ## 성능
 
-Lighthouse(모바일, 시크릿 창, 3회 중간값) 개선 전후는 다음과 같습니다. 상세 조건과 해석은 위키 "프론트엔드 Lighthouse 측정"에 있습니다.
+Lighthouse(모바일, 시크릿 창, 3회 중간값) 개선 전후는 다음과 같습니다. 상세 조건과 해석은 위키 [성능 테스트](https://github.com/Team-likelion-3rd-Project/likelion-devops-7th-3rd-team01/wiki/%EC%84%B1%EB%8A%A5-%ED%85%8C%EC%8A%A4%ED%8A%B8)의 "프론트엔드 Lighthouse 측정"에 있습니다.
 
 | 화면 | Performance | LCP | 변경 |
 |---|---|---|---|
